@@ -20,6 +20,7 @@ from redash.handlers.groups import GroupListResource, GroupResource, GroupMember
 from redash.handlers.destinations import DestinationTypeListResource, DestinationResource, DestinationListResource
 from redash.handlers.query_snippets import QuerySnippetListResource, QuerySnippetResource
 
+from redash.handlers.periodic_tasks import PeriodicTaskResource, PeriodicTaskListResource
 
 class ApiExt(Api):
     def add_org_resource(self, resource, *urls, **kwargs):
@@ -102,3 +103,8 @@ api.add_org_resource(DestinationListResource, '/api/destinations', endpoint='des
 
 api.add_org_resource(QuerySnippetResource, '/api/query_snippets/<snippet_id>', endpoint='query_snippet')
 api.add_org_resource(QuerySnippetListResource, '/api/query_snippets', endpoint='query_snippets')
+api.add_org_resource(PeriodicTaskResource,
+                    '/api/periodictasks/<task_id>',
+                    endpoint='periodic_task')
+api.add_org_resource(PeriodicTaskListResource, '/api/periodictasks', endpoint='periodic_tasks')
+

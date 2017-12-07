@@ -1,0 +1,76 @@
+<div class="container">
+  <page-header title='{{$ctrl.alert.name || $ctrl.getDefaultName() || "New Job" }}'>
+  </page-header>
+  <div class="container">
+    <div class="row bg-white tiled p-10">
+      <div class="col-md-8">
+        <form name="jobForm" class="form">
+          <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" ng-model="$ctrl.periodictask.name"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input class="form-control" type="text" ng-model="$ctrl.periodictask.description"/>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Query ID</label>
+            <input class="form-control" type="number" ng-model="$ctrl.periodictask.query_id"/>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Trigger</label>
+            <select ng-model="$ctrl.periodictask.trigger"
+              ng-change="$ctrl.showCronTimings()"
+              ng-options="c as c for c in $ctrl.triggers">
+            </select>
+          </div>
+          <div class="form-group" ng-disable ng-if=$ctrl.isCronEnable>
+            <table>
+              <tbody>
+                <tr ng-repeat="(key, value) in $ctrl.periodictask.trigger_params">
+                  <td>
+                    <label class="control-label">{{key}}</label>
+                  </td>
+                  <td>
+                  <input type="text" ng-model="$ctrl.periodictask.trigger_params[key]"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <label class="control-label">Arguments</label>
+          <table>
+            <tbody>
+               <tr ng-repeat="arg in $ctrl.args">
+                <td>
+                  <input type="text" ng-model="arg.name" value="{{arg.name}}"/>
+                </td>
+                <td>
+                  <input type="text" ng-model="arg.val" value="{{arg.val}}"/>
+                </td>
+                <td>
+                  <select ng-model="int" ng-options="x as x for x in $ctrl.dataTypes">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button ng-hide="creatingObject" ng-click="$ctrl.addArgs()">Add Row</button>
+          <!-- <div class="form-group">
+            <label class="control-label">Emails</label>
+            <input name="name" type="text" class="form-control"
+              ng-model="$ctrl.args.emails">
+          </div> -->
+          <span ng-if="$ctrl.taskId != 'new'">
+            <button ng-click="$ctrl.pause()" ng-show=$ctrl.is_running>Pause</button>
+            <button ng-click="$ctrl.resume()" ng-show=!$ctrl.is_running>Resume</button>
+          </span>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="$ctrl.closeDialog()">Close</button>
+    <button type="button" class="btn btn-primary" ng-click="$ctrl.submit()">Save</button>
+  </div>
+</div>

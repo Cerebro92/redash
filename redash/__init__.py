@@ -134,4 +134,13 @@ def create_app(load_admin=True):
     limiter.init_app(app)
     handlers.init_app(app)
 
+    # custom
+    from scheduler import CustomAPScheduler
+    myscheduler = CustomAPScheduler()
+    from apscheduler.jobstores.sqlalchemy import  SQLAlchemyJobStore
+    with app.app_context():
+        myscheduler.init_app(app)
+        myscheduler._scheduler.add_jobstore(SQLAlchemyJobStore(engine=db.engine))
+        myscheduler.start()
     return app
+

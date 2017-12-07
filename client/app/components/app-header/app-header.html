@@ -33,6 +33,9 @@
         <li ng-if="$ctrl.showAlertsLink">
           <a href="alerts">Alerts</a>
         </li>
+        <li>
+          <a href="periodictasks">Periodic Tasks</a>
+        </li>
       </ul>
 
       <!-- Add New Button -->
@@ -44,6 +47,7 @@
           <li role="menuitem"><a ng-show="$ctrl.currentUser.hasPermission('create_dashboard')" ng-click="$ctrl.newDashboard()">Dashboard</a></li>
           <li role="menuitem" ng-show="$ctrl.showNewQueryMenu"><a href="queries/new">Query</a></li>
           <li role="menuitem"><a href="alerts/new">Alert</a></li>
+          <li role="menuitem"><a href="periodictasks/new">Periodic Task</a></li>
         </ul>
       </div>
 
