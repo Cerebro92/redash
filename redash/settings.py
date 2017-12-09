@@ -292,21 +292,11 @@ COMMON_CLIENT_CONFIG = {
     'logoUrl': LOGO_URL
 }
 
-SCHEDULER_API_ENABLED = True
-"""
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-from apscheduler.jobstores.mongodb import MongoDBJobStore
-SCHEDULER_JOBSTORES = {
-    'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite'),
-     #'mongo': MongoDBJobStore()
-}
-SCHEDULER_EXECUTORS = {
-    'default': {'type': 'threadpool', 'max_workers': 5}
-}
 
-SCHEDULER_JOB_DEFAULTS = {
-    'coalesce': False,
-    'max_instances': 2
+SCHEDULER_API_ENABLED = True
+
+SCHEDULER_JOBSTORES = {
+    'default': SQLAlchemyJobStore(url=SQLALCHEMY_DATABASE_URI)
 }
-"""
 

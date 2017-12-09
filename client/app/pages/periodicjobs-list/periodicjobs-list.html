@@ -15,8 +15,8 @@
       </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="row in $ctrl.periodictasks.getPageRows()">
-        <td><a href="periodictasks/{{row.id}}">{{row.name}}</a></td>
+      <tr ng-repeat="row in $ctrl.periodicjobs.getPageRows()">
+        <td><a href="periodicjobs/{{row.id}}">{{row.name}}</a></td>
         <td>{{row.user}}</td>
         <td><span am-time-ago="row.created_at">{{row.created_at}}</span></td>
         <td>

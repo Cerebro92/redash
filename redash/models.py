@@ -11,6 +11,7 @@ import time
 from funcy import project
 
 import xlsxwriter
+from flask import current_app
 from flask_login import AnonymousUserMixin, UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from passlib.apps import custom_app_context as pwd_context
@@ -1655,8 +1656,20 @@ class Task(db.Model):
     job_state = Column(db.LargeBinary, nullable=False)
     __tablename__ = 'apscheduler_jobs'
 
+    def to_dict(self):
+        js = current_app.apscheduler.get_job(self.id)
+        d = {
+            'id': self.id,
+            'args': js.args,
+            'kwargs': js.kwargs,
+            'trigger': js.trigger.__class__.__name__.replace('Trigger', ''),
+            'trigger_params': {field.name: str(field) for field in js.trigger.fields},
+            'is_running': js.next_run_time is not None
+        }
+        return d
 
-class PeriodicTask(db.Model):
+
+class PeriodicJob(db.Model):
     id = Column(db.Integer, primary_key=True)
     name = Column(db.Unicode(512))
     description = Column(db.Unicode(1024))
@@ -1668,13 +1681,33 @@ class PeriodicTask(db.Model):
     task = db.relationship(Task, backref="periodic_task")
     query_id = Column(db.Integer, db.ForeignKey("queries.id"))
     query_rel = db.relationship(Query, backref="periodic_task")
-    __tablename__ = 'periodic_task'
+    __tablename__ = 'periodic_job'
+
+    @classmethod
+    def create(cls, **kwargs):
+        periodic_job = cls(**kwargs)
+
+        db.session.add(periodic_job)
+        db.session.flush()
+        db.session.commit()
+
+        return periodic_job
+
+    @classmethod
+    def update(cls, **kwargs):
+        periodic_job = cls(**kwargs)
+
+        db.session.add(periodic_job)
+        db.session.commit()
+
+        return periodic_job
+
 
     def to_dict(self):
         from redash.models import db
-        from apscheduler.jobstores.sqlalchemy import  SQLAlchemyJobStore
-        js = SQLAlchemyJobStore(engine=db.engine)
-        task = js._reconstitute_job(self.task.job_state)
+        # from apscheduler.jobstores.sqlalchemy import  SQLAlchemyJobStore
+        # js = SQLAlchemyJobStore(engine=db.engine)
+        # task = js._reconstitute_job(self.task.job_state)
         d = {
             'id': self.id,
             'name': self.name,
@@ -1682,29 +1715,31 @@ class PeriodicTask(db.Model):
             'created_at': self.created_at,
             'query_id': self.query_id,
             'user': self.user.name,
-            'task_id': self.task.id,
-            'task_name': task.name,
-            'is_running': task.next_run_time is not None,
-            'trigger': 'cron',
-            'trigger_params': self.get_trigger(),
-            'task_params': self.task_params()
+            # 'task_id': self.task.id,
+            # 'task_name': task.name,
+            # 'is_running': task.next_run_time is not None,
+            # 'trigger': 'cron',
+            # 'trigger_params': self.get_trigger(),
+            # 'task_params': self.task_params()
+            'task': self.task.to_dict()
         }
         return d
 
-    def task_params(self):
-        import pickle
-        state = pickle.loads(self.task.job_state)
-        params = state['kwargs']
-        return [{'name': k, 'val': v} for k, v in params.iteritems()]
 
-    def get_trigger(self):
-        import pickle
-        state = pickle.loads(self.task.job_state)
-        trigger = state['trigger']
+    # def task_params(self):
+    #    import pickle
+    #    state = pickle.loads(self.task.job_state)
+    #    params = state['kwargs']
+    #    return [{'name': k, 'val': v} for k, v in params.iteritems()]
+
+    # def get_trigger(self):
+    #    import pickle
+    #    state = pickle.loads(self.task.job_state)
+    #    trigger = state['trigger']
         # currently supports cron jobs
         # currently supports hour, minute and second changes
-        fields = trigger.fields[-3:]
-        return dict((field.name, str(field)) for field in fields)
+    #    fields = trigger.fields[-3:]
+    #    return dict((field.name, str(field)) for field in fields)
 
 
 _gfk_types = {'queries': Query, 'dashboards': Dashboard}

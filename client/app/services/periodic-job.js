@@ -1,4 +1,4 @@
-function PeriodicTask($resource, $http) {
+function PeriodicJob($resource, $http) {
   const actions = {
     save: {
       method: 'POST',
@@ -15,25 +15,25 @@ function PeriodicTask($resource, $http) {
       }].concat($http.defaults.transformRequest),
     },
     scheduleJob: {
-      method: 'post',
-      url: '/api/periodictasks/:id',
+      method: 'POST',
+      url: '/api/periodicjobs/:id',
       params: { id: '@id' },
     },
     pause: {
       method: 'post',
-      url: '/api/periodictasks/:id',
-      params: { id: '@id' }
+      url: '/api/periodicjobs/:id',
+      params: { id: '@id' },
     },
     resume: {
       method: 'post',
-      url: '/api/periodictasks/:id',
-      params: { id: '@id' }
-    }
+      url: '/api/periodicjobs/:id',
+      params: { id: '@id' },
+    },
   };
-  const resource = $resource('api/periodictasks/:id', { id: '@id' }, actions);
+  const resource = $resource('api/periodicjobs/:id', { id: '@id' }, actions);
   return resource;
 }
 
 export default function init(ngModule) {
-  ngModule.factory('PeriodicTask', PeriodicTask);
+  ngModule.factory('PeriodicJob', PeriodicJob);
 }

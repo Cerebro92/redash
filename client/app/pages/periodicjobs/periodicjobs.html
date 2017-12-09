@@ -1,0 +1,69 @@
+<div class="container">
+  <page-header title='{{$ctrl.periodicJob.name || $ctrl.getDefaultName() || "New Job" }}'>
+  </page-header>
+  <div class="container">
+    <div class="row bg-white tiled p-10">
+      <div class="col-md-8">
+        <form name="jobForm" class="form">
+          <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" ng-model="$ctrl.periodicJob.name"/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input class="form-control" type="text" ng-model="$ctrl.periodicJob.description"/>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Query ID</label>
+            <input class="form-control" type="number" ng-model="$ctrl.periodicJob.query_id"/>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Trigger</label>
+            <select ng-model="$ctrl.triggerName"
+              ng-options="c as c for c in $ctrl.triggers">
+            </select>
+          </div>
+          <div class="form-group">
+            <table>
+              <tbody>
+                <tr ng-repeat="(key, value) in $ctrl.triggerParams">
+                  <td>
+                    <label class="control-label">{{key}}</label>
+                  </td>
+                  <td>
+                  <input type="text" ng-model="$ctrl.triggerParams[key]"/>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <label class="control-label">Arguments</label>
+          <table>
+            <tbody>
+               <tr ng-repeat="param in $ctrl.queryParams">
+                <td>
+                  <input type="text" ng-model="param.name" />
+                </td>
+                <td>
+                  <input type="text" ng-model="param.val" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button ng-click="$ctrl.addQueryParams()">Add Row</button>
+          <span ng-if="$ctrl.taskId != 'new'">
+            <button ng-click="$ctrl.pause()" ng-show=$ctrl.periodicJob.task.is_running>Pause
+            </button>
+            <button ng-click="$ctrl.resume()" ng-show=!$ctrl.periodicJob.task.is_running>Resume
+            </button>
+          </span>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="$ctrl.closeDialog()">Close</button>
+    <button type="button" class="btn btn-primary" ng-click="$ctrl.submit()">Save</button>
+  </div>
+</div>
