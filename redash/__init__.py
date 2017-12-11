@@ -8,6 +8,7 @@ from flask_sslify import SSLify
 from werkzeug.contrib.fixers import ProxyFix
 from werkzeug.routing import BaseConverter, ValidationError
 from statsd import StatsClient
+from flask_apscheduler import APScheduler
 from flask_mail import Mail
 from flask_limiter import Limiter
 from flask_limiter.util import get_ipaddr
@@ -134,4 +135,15 @@ def create_app(load_admin=True):
     limiter.init_app(app)
     handlers.init_app(app)
 
+    # custom
+    # from scheduler import CustomAPScheduler
+    # myscheduler = CustomAPScheduler()
+    # from apscheduler.jobstores.sqlalchemy import  SQLAlchemyJobStore
+
+    myscheduler = APScheduler()
+    # with app.app_context():
+    myscheduler.init_app(app)
+    # myscheduler._scheduler.add_jobstore(SQLAlchemyJobStore(engine=db.engine))
+    myscheduler.start()
     return app
+

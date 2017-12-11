@@ -1,0 +1,91 @@
+<div class="container">
+  <page-header title='{{$ctrl.periodicJob.name || $ctrl.getDefaultName() || "New Job" }}'>
+  </page-header>
+  <div class="container">
+    <div class="row bg-white tiled p-10">
+      <div class="col-md-8">
+        <form name="$ctrl.jobForm" class="form" ng-submit="$ctrl.submit()" novalidate>
+          <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" type="text" ng-model="$ctrl.periodicJob.name" required/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <input class="form-control" type="text" ng-model="$ctrl.periodicJob.description" required/>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Query ID</label>
+            <input class="form-control" type="number" ng-model="$ctrl.periodicJob.query_id" required/>
+          </div>
+          <div class="form-group">
+            <label class="control-label">Trigger</label>
+            <select ng-model="$ctrl.triggerName"
+              ng-options="c as c for c in $ctrl.triggers">
+            </select>
+          </div>
+            <div class="form-group">
+              <label class="control-label">Year</label>
+              <input class="form-control" type="" name="" ng-model="$ctrl.triggerParams.year"
+                ng-pattern="$ctrl.triggerRegex.yearRegex" required/>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Month</label>
+              <input class="form-control" type="" name="" ng-model="$ctrl.triggerParams.month"
+                ng-pattern="$ctrl.triggerRegex.monthRegex" required/>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Day</label>
+              <input class="form-control" type="" name="" ng-model="$ctrl.triggerParams.day"
+                ng-pattern="$ctrl.triggerRegex.DayRegex" required/>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Hour</label>
+              <input class="form-control" type="" name="" ng-model="$ctrl.triggerParams.hour"
+                ng-pattern="$ctrl.triggerRegex.hourRegex" required/>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Minute</label>
+              <input class="form-control" type="" name="" ng-model="$ctrl.triggerParams.minute"
+                ng-pattern="$ctrl.triggerRegex.minuteRegex" required/>
+            </div>
+            <div class="form-group">
+              <label class="control-label">Second</label>
+              <input class="form-control" type="" name="" ng-model="$ctrl.triggerParams.second"
+                ng-pattern="$ctrl.triggerRegex.seconRegex" required/>
+            </div>
+          <label class="control-label">Query Params</label>
+          <table>
+            <tbody>
+               <tr ng-repeat="param in $ctrl.queryParams">
+                <td>
+                  <input type="text" ng-model="param.name" />
+                </td>
+                <td>
+                  <input type="text" ng-model="param.val" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p>
+            <a ng-click="$ctrl.addQueryParams()" class="btn btn-default"><i class="fa fa-plus"></i> New Row</a>
+          </p>
+          <div ng-if="$ctrl.jobId != 'new'" class="form-group">
+            <button ng-click="$ctrl.pause()" ng-show=$ctrl.periodicJob.task.is_running
+              type="button" class="btn btn-primary">
+              Pause
+            </button>
+            <button ng-click="$ctrl.resume()" ng-show=!$ctrl.periodicJob.task.is_running
+              type="button" class="btn btn-primary">
+              Resume
+            </button>
+          </div>
+          <div class="form-group">
+          <button type="submit" class="btn btn-primary" ng-disabled="!$ctrl.jobForm.$valid">Save
+          </button> 
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

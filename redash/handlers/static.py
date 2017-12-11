@@ -69,6 +69,8 @@ rules = ['/admin/<anything>/<whatever>',
          '/groups/<pk>/data_sources',
          '/queries/<query_id>',
          '/queries/<query_id>/<anything>',
+         '/periodicjobs',
+         '/periodicjobs/<pk>',
          '/personal']
 
 register_static_routes(rules)

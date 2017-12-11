@@ -1,6 +1,7 @@
 .coveralls.yml
 .idea
 *.pyc
+*.swp
 .coverage
 coverage.xml
 client/dist

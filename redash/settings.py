@@ -289,3 +289,13 @@ COMMON_CLIENT_CONFIG = {
     'mailSettingsMissing': MAIL_DEFAULT_SENDER is None,
     'logoUrl': LOGO_URL
 }
+
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+
+SCHEDULER_API_ENABLED = True
+
+SCHEDULER_JOBSTORES = {
+    'default': SQLAlchemyJobStore(url=SQLALCHEMY_DATABASE_URI)
+}
+
+GLOBAL_API_KEY = os.environ.get("GLOBAL_API_KEY", "test")
