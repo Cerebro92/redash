@@ -298,6 +298,6 @@ SCHEDULER_JOBSTORES = {
     'default': SQLAlchemyJobStore(url=SQLALCHEMY_DATABASE_URI)
 }
 
-SCHEDULER_TIMEZONE = 'IST'
+SCHEDULER_TIMEZONE = 'Asia/Kolkata'
 
 GLOBAL_API_KEY = os.environ.get("GLOBAL_API_KEY", "test")
