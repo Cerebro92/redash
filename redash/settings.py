@@ -290,12 +290,11 @@ COMMON_CLIENT_CONFIG = {
     'logoUrl': LOGO_URL
 }
 
-from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
-
 SCHEDULER_API_ENABLED = True
 
+from jobstore import CustomSQLAlchemyJobStore
 SCHEDULER_JOBSTORES = {
-    'default': SQLAlchemyJobStore(url=SQLALCHEMY_DATABASE_URI)
+    'default': CustomSQLAlchemyJobStore(url=SQLALCHEMY_DATABASE_URI)
 }
 
 SCHEDULER_TIMEZONE = 'Asia/Kolkata'
