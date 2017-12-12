@@ -1,17 +1,10 @@
 from datetime import datetime
 
-from kale import task
+from kale import settings, task
 from taskworker import *
 from taskworker.utils import *
 from taskworker.utils import _fix_recipients_list
 
-# TODO move these settings to config file
-BUCKET = 'dev-dwh-redash-query-results'
-S3_URL_EXPIRY_TIME = 60 * 60 * 24 * 10
-
-EMAIL_FROM = 'noreply@delhivery.com'
-EMAIL_SUBJECT = 'Daily NDR report'
-EMAIL_BODY = 'Link: {}'
 
 class PushToS3Task(task.Task):
     '''
@@ -20,8 +13,8 @@ class PushToS3Task(task.Task):
     defination can be written in taskworkers
     '''
     max_retries = 3
-    time_limit = 5
-    queue = 'default'
+    time_limit = 10
+    queue = settings.TASK_SQS_QUEUE
 
     def run_task(self, query_id, api_key, **params):
         try:
@@ -32,17 +25,17 @@ class PushToS3Task(task.Task):
             key = 'report_{}.csv'.format(datetime.now().strftime('%Y_%m_%d'))
 
             # push to S3
-            push_data_to_s3(s3_client, raw_payload, BUCKET, key)
+            push_data_to_s3(s3_client, raw_payload, settings.BUCKET, key)
 
             # generate presigned URL
-            url = generate_presigned_s3_url(s3_client, BUCKET,
-                    key, S3_URL_EXPIRY_TIME, 'GET')
+            url = generate_presigned_s3_url(s3_client, settings.BUCKET,
+                    key, settings.S3_URL_EXPIRY_TIME, 'GET')
 
             EMAIL_TO = _fix_recipients_list(mail_to)
             EMAIL_CC = []
-            is_sent = send_email(ses_client, EMAIL_FROM, EMAIL_TO,
-                                EMAIL_CC, EMAIL_SUBJECT,
-                                EMAIL_BODY.format(url))
+            is_sent = send_email(ses_client, settings.EMAIL_FROM, EMAIL_TO,
+                            EMAIL_CC, settings.EMAIL_SUBJECT,
+                            settings.EMAIL_BODY.format(url))
 
             if is_sent:
                 print 'Mail sent'
