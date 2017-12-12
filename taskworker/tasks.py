@@ -3,14 +3,11 @@ from datetime import datetime
 from kale import settings, task
 from taskworker import *
 from taskworker.utils import *
-from taskworker.utils import _fix_recipients_list
 
 
 class PushToS3Task(task.Task):
     '''
-    Defining Kale's class here just for pushing
-    cls defination to SQS. actual function
-    defination can be written in taskworkers
+    Kale's class implementation
     '''
     max_retries = 3
     time_limit = 10
@@ -18,11 +15,12 @@ class PushToS3Task(task.Task):
 
     def run_task(self, query_id, api_key, **params):
         try:
-            mail_to = params.get('emails')
+            mail_to = params.pop('emails', None)
             print params
-            raw_payload = get_query_csv(query_id, api_key, **params)
+            raw_payload = get_query_result(query_id, api_key, **params)
 
-            key = 'report_{}.csv'.format(datetime.now().strftime('%Y_%m_%d'))
+            key = 'report_{}.csv'.format(
+                    datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
 
             # push to S3
             push_data_to_s3(s3_client, raw_payload, settings.BUCKET, key)

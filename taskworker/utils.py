@@ -1,11 +1,14 @@
 import requests
 import urllib
 
+from taskworker.refresh import get_fresh_query_result
+
 
 def push_data_to_s3(client, body, bucket, key):
     r = client.put_object(Body=body, Bucket=bucket, Key=key)
 
-    print "Uploaded file to bucket: {} key: {} reponse: {}".format(bucket, key, r)
+    # print "Uploaded file to bucket: {} key: {} reponse: {}"\
+    #        .format(bucket, key, r)
 
     return r
 
@@ -43,47 +46,36 @@ def send_email(client, _from, to, cc, subject, body):
 
     return status
 
-REFRESH_URL = 'http://127.0.0.1:5000/api/queries/{}/refresh?api_key={}&'
-RESULT_STATUS_URL = 'http://127.0.0.1:5000/api/jobs/{}?api_key={}'
-RESULT_URL = 'http://127.0.0.1:5000/api/queries/{}/results/{}.csv?api_key={}'
-
 def parametrize(d):
     for k, v in d.iteritems():
         if not k.startswith('p_'):
             d['p_' + k] = d.pop(k)
     return d
 
+def adjust_param_dates(params):
+    # custom function to add suffix in date as suffix
+    # in ['start', end] time
+    todays_date = datetime.now().replace(
+            hour=0, minute=0, second=0,
+            microsecond=0)
+    yesterdays_date = todays_date - timedelta(days=1)
+
+    for k in params:
+        if k in ['start']:
+            param[k] = '{} {}'.format(todays_date.strftime("%Y-%m-%d"),
+                    params[k])
+        elif k in ['end']:
+            param[k] = '{} {}'.format(yesterdays_date.strftime("%Y-%m-%d"),
+                    params[k])
+    return params
+
 def get_query_csv(query_id, api_key, **params):
 
-    # parmas modifications
-    for k in ['start', 'end']:
-        if params.get(k):
-            params[k] = '2017-11-22 ' + params[k]
-
-    # fetch JOB ID
-    response = requests.post(\
-            REFRESH_URL.format(query_id, api_key) +
-            urllib.urlencode(parametrize(params)))
-
-    print response.json()
-    job_id = response.json()['job']['id']
-
-    # Fetch Query Result ID
-    # TODO make better
-    query_result_id = None
-    _wait_sec = 0
-    while (not query_result_id):
-        response = requests.get(RESULT_STATUS_URL.format(job_id, api_key))
-        import time
-        # time.sleep(_wait_sec)
-        _wait_sec += 1
-        print response.json()
-        query_result_id = response.json()['job']['query_result_id']
-
-    # Response
-    response = requests.get(RESULT_URL.format(query_id, query_result_id, api_key))
-    print response.text
-    return response.text
+    # parm adjustments
+    params = adjust_param_dates(params)
+    res = get_fresh_query_result(settings.REDASH_URL, query_id, api_key,
+            parametrize(params))
+    return res
 
 def _fix_recipients_list(recipients_list):
     if isinstance(recipients_list, basestring):
