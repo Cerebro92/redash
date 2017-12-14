@@ -6,10 +6,7 @@ from flask import current_app, request
 from redash import models
 from redash import settings
 from redash.handlers.base import BaseResource
-try:
-    from taskworker import tasks
-except ImportError:
-    pass
+from taskworker import tasks
 
 def update_model(model, updates):
     for k, v in updates.items():

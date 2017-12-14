@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from kale import settings, task
+
 from taskworker import *
 from taskworker.utils import *
+from taskworker.utils import _fix_recipients_list
 
 
 class PushToS3Task(task.Task):
@@ -17,16 +19,16 @@ class PushToS3Task(task.Task):
         try:
             mail_to = params.pop('emails', None)
             print params
-            raw_payload = get_query_result(query_id, api_key, **params)
+            raw_payload = get_query_csv(query_id, api_key, **params)
 
-            key = 'report_{}.csv'.format(
+            key = '{}/report_{}.csv'.format(str(query_id),
                     datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
 
             # push to S3
-            push_data_to_s3(s3_client, raw_payload, settings.BUCKET, key)
+            push_data_to_s3(s3_client, raw_payload, settings.REPORTS_S3_BUCKET, key)
 
             # generate presigned URL
-            url = generate_presigned_s3_url(s3_client, settings.BUCKET,
+            url = generate_presigned_s3_url(s3_client, settings.REPORTS_S3_BUCKET,
                     key, settings.S3_URL_EXPIRY_TIME, 'GET')
 
             EMAIL_TO = _fix_recipients_list(mail_to)

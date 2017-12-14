@@ -14,6 +14,8 @@ def poll_job(s, redash_url, job):
     while job['status'] not in (3,4):
         response = s.get('{}/api/jobs/{}'.format(redash_url, job['id']))
         job = response.json()['job']
+	print '###############'
+	print response.json()
         time.sleep(1)
 
     if job['status'] == 3:

@@ -300,3 +300,5 @@ SCHEDULER_JOBSTORES = {
 SCHEDULER_TIMEZONE = 'Asia/Kolkata'
 
 GLOBAL_API_KEY = os.environ.get("GLOBAL_API_KEY", "test")
+TASK_SQS_QUEUE = os.environ.get("TASK_SQS_QUEUE")
+

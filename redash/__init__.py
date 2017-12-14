@@ -21,6 +21,7 @@ from redash.destinations import import_destinations
 
 __version__ = '4.0.0'
 
+os.environ.setdefault('KALE_SETTINGS_MODULE', 'configs.kale_settings')
 
 def setup_logging():
     handler = logging.StreamHandler(sys.stdout if settings.LOG_STDOUT else sys.stderr)

@@ -1,6 +1,6 @@
-import requests
-import urllib
+from datetime import datetime, timedelta
 
+from kale import settings
 from taskworker.refresh import get_fresh_query_result
 
 
