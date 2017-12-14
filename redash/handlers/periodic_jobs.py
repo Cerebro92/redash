@@ -30,7 +30,7 @@ def create_or_update_job(job_params, user, action='create'):
         'func': publish,
         'name': job_params['name'],
         'args': (job_params['query_id'], settings.GLOBAL_API_KEY),
-        'kwargs': query_params,
+        'kwargs': dict(query_params, **{'name': job_params['name']}),
         }, **trigger_params)
 
     if action == 'create':

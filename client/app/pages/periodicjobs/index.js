@@ -8,7 +8,7 @@ const cronTriggerRegex = {
   dayRegex: '^((\\*)|(0?[1-9])|([12](\\d))|(3[01]))$',
   hourRegex: '^((\\*)|(0?\\d|1\\d+)|(2[0-3]))$',
   minuteRegex: '^((\\*)|(0?\\d)|([1-5]\\d))$',
-  secondRegex: '^(\\*)|(0?\\d)|([1-5]\\d))$',
+  secondRegex: '^((\\*)|(\\d{1,1})|([0-5]\\d{1,1}))$',
 };
 
 function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, toastr) {
