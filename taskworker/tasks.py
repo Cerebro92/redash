@@ -12,7 +12,7 @@ class PushToS3Task(task.Task):
     Kale's class implementation
     '''
     max_retries = 3
-    time_limit = 10
+    time_limit = 20
     queue = settings.TASK_SQS_QUEUE
 
     def run_task(self, query_id, api_key, **params):
