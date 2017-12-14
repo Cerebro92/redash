@@ -33,7 +33,7 @@ class PushToS3Task(task.Task):
 
             EMAIL_TO = _fix_recipients_list(mail_to)
             EMAIL_CC = []
-            EMAIL_SUBJECT = params.pop('emails', settings.EMAIL_SUBJECT)
+            EMAIL_SUBJECT = params.pop('name', settings.EMAIL_SUBJECT)
             is_sent = send_email(ses_client, settings.EMAIL_FROM, EMAIL_TO,
                             EMAIL_CC, EMAIL_SUBJECT,
                             settings.EMAIL_BODY.format(url))
