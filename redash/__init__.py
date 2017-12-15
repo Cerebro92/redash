@@ -68,6 +68,7 @@ migrate = Migrate()
 mail.init_mail(settings.all_settings())
 statsd_client = StatsClient(host=settings.STATSD_HOST, port=settings.STATSD_PORT, prefix=settings.STATSD_PREFIX)
 limiter = Limiter(key_func=get_ipaddr, storage_uri=settings.LIMITER_STORAGE)
+myscheduler = APScheduler()
 
 import_query_runners(settings.QUERY_RUNNERS)
 import_destinations(settings.DESTINATIONS)
@@ -136,15 +137,6 @@ def create_app(load_admin=True):
     limiter.init_app(app)
     handlers.init_app(app)
 
-    # custom
-    # from scheduler import CustomAPScheduler
-    # myscheduler = CustomAPScheduler()
-    # from apscheduler.jobstores.sqlalchemy import  SQLAlchemyJobStore
-
-    myscheduler = APScheduler()
-    # with app.app_context():
     myscheduler.init_app(app)
-    # myscheduler._scheduler.add_jobstore(SQLAlchemyJobStore(engine=db.engine))
-    myscheduler.start()
     return app
 
