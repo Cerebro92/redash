@@ -28,7 +28,7 @@ class PushToS3Task(task.Task):
             push_data_to_s3(s3_client, raw_payload, settings.REPORTS_S3_BUCKET, key)
 
             # generate presigned URL
-            url = generate_presigned_s3_url(s3_client, settings.REPORTS_S3_BUCKET,
+            url = generate_presigned_s3_url(s3_read_client, settings.REPORTS_S3_BUCKET,
                     key, settings.S3_URL_EXPIRY_TIME, 'GET')
 
             EMAIL_TO = _fix_recipients_list(mail_to)

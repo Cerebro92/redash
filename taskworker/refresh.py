@@ -29,6 +29,8 @@ def get_fresh_query_result(redash_url, query_id, api_key, params):
 
     response = s.post('{}/api/queries/{}/refresh'.format(redash_url, query_id), params=params)
 
+    print response.status_code
+    print response.text
     if response.status_code != 200:
         raise Exception('Refresh failed.')
 
