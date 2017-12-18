@@ -138,5 +138,11 @@ def create_app(load_admin=True):
     handlers.init_app(app)
 
     myscheduler.init_app(app)
+
+    # development server scheduler
+    @app.before_first_request
+    def start_scheduler():
+        myscheduler.start()
+
     return app
 
