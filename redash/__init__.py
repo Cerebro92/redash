@@ -142,7 +142,8 @@ def create_app(load_admin=True):
     # development server scheduler
     @app.before_first_request
     def start_scheduler():
-        myscheduler.start()
+        if not myscheduler.scheduler.running:
+            myscheduler.start()
 
     return app
 
