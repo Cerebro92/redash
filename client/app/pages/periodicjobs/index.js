@@ -3,20 +3,20 @@ import template from './periodicjobs.html';
 
 
 const cronTriggerRegex = {
-  yearRegex: '^((\\*)|\\d{4})$',
-  monthRegex: '^((\\*)|(0?[1-9])|(1[0-2]))$',
-  dayRegex: '^((\\*)|(0?[1-9])|([12](\\d))|(3[01]))$',
-  hourRegex: '^((\\*)|(0?\\d|1\\d+)|(2[0-3]))$',
-  minuteRegex: '^((\\*)|(0?\\d)|([1-5]\\d))$',
+  yearRegex: '^((\\*)|\\d{4,4})$',
+  monthRegex: '^((\\*)|(0?\\d{1,1})|(1[0-2]))$',
+  dayRegex: '^((\\*)|(\\d{1,1})|([0-2]\\d{1,1})|(3[01]))$',
+  hourRegex: '^((\\*)|(\\d{1,1})|([0-1]\\d{1,1})|(2[0-3]))$',
+  minuteRegex: '^((\\*)|(\\d{1,1})|([0-5]\\d{1,1}))$',
   secondRegex: '^((\\*)|(\\d{1,1})|([0-5]\\d{1,1}))$',
 };
 
 function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, Query, toastr) {
   this.jobId = $routeParams.jobId;
+  this.triggerRegex = cronTriggerRegex;
 
   if (this.jobId === 'new') {
     this.periodicJob = new PeriodicJob();
-    this.triggerRegex = cronTriggerRegex;
     this.queryParams = [];
   } else {
     this.periodicJob = PeriodicJob.get({ id: this.jobId }, (periodicjob) => {
