@@ -1,0 +1,2 @@
+export KALE_SETTINGS_MODULE=configs.kale_settings
+python kale_worker.py

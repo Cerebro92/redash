@@ -20,6 +20,7 @@ function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, Query, to
     this.queryParams = [];
   } else {
     this.periodicJob = PeriodicJob.get({ id: this.jobId }, (periodicjob) => {
+      this.periodicJob.query_id = String(this.periodicJob.query_id);
       this.triggerParams = periodicjob.task.trigger_params;
       this.queryParams = this.objectToListQueryParams(periodicjob.task.kwargs);
       this.isRunning = periodicjob.task.isRunning;

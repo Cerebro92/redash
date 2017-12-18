@@ -15,8 +15,9 @@
           </div>
           <div class="form-group">
             <label class="control-label">Query ID</label>
+            {{$ctrl.periodicJob.query_id}}
             <select class="form-control" ng-model="$ctrl.periodicJob.query_id" required>
-              <option ng-repeat="query in $ctrl.queryOptions" value="{{query.id}}">
+              <option ng-repeat="query in $ctrl.queryOptions" value={{query.id}}>
                 {{query.id}} | {{query.name}}
               </option>
             </select>

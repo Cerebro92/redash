@@ -62,10 +62,10 @@ def adjust_param_dates(params):
 
     for k in params:
         if k in ['start']:
-            param[k] = '{} {}'.format(todays_date.strftime("%Y-%m-%d"),
+            params[k] = '{} {}'.format(todays_date.strftime("%Y-%m-%d"),
                     params[k])
         elif k in ['end']:
-            param[k] = '{} {}'.format(yesterdays_date.strftime("%Y-%m-%d"),
+            params[k] = '{} {}'.format(yesterdays_date.strftime("%Y-%m-%d"),
                     params[k])
     return params
 
