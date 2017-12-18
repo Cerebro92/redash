@@ -869,6 +869,12 @@ class Query(ChangeTrackingMixin, TimestampMixin, BelongsToOrgMixin, db.Model):
 
         return d
 
+    def to_minimal_dict(self, *fields):
+        d = {}
+        for field in fields:
+            d[field] = getattr(self, field)
+        return d
+
     def archive(self, user=None):
         db.session.add(self)
         self.is_archived = True

@@ -201,6 +201,10 @@ function QueryResource($resource, $http, $q, $location, currentUser, QueryResult
         isArray: false,
         url: 'api/queries/:id/results.json',
       },
+      options: {
+        method: 'get',
+        isArray: true,
+      },
     },
   );
 

@@ -143,12 +143,15 @@ class QueryListResource(BaseResource):
 
         Responds with an array of :ref:`query <query-response-label>` objects.
         """
+        results = models.Query.all_queries(self.current_user.group_ids,
+                    self.current_user.id)
 
-        results = models.Query.all_queries(self.current_user.group_ids, self.current_user.id)
-        page = request.args.get('page', 1, type=int)
-        page_size = request.args.get('page_size', 25, type=int)
-        return paginate(results, page, page_size, lambda q: q.to_dict(with_stats=True, with_last_modified_by=False))
-
+        if request.args.get('minimal'):
+            return [result.to_minimal_dict('id', 'name') for result in results]
+        else:
+            page = request.args.get('page', 1, type=int)
+            page_size = request.args.get('page_size', 25, type=int)
+            return paginate(results, page, page_size, lambda q: q.to_dict(with_stats=True, with_last_modified_by=False))
 
 class MyQueriesResource(BaseResource):
     @require_permission('view_query')

@@ -11,7 +11,7 @@ const cronTriggerRegex = {
   secondRegex: '^((\\*)|(\\d{1,1})|([0-5]\\d{1,1}))$',
 };
 
-function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, toastr) {
+function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, Query, toastr) {
   this.jobId = $routeParams.jobId;
 
   if (this.jobId === 'new') {
@@ -25,6 +25,10 @@ function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, toastr) {
       this.isRunning = periodicjob.task.isRunning;
     });
   }
+
+  Query.options({ minimal: true }, (queries) => {
+    this.queryOptions = queries;
+  });
 
   this.triggerName = 'cron';
 
@@ -82,6 +86,7 @@ function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, toastr) {
       },
       (periodicjob) => {
         toastr.success('Paused.');
+        this.periodicJob = periodicjob;
         $location.path(`/periodicjobs/${periodicjob.id}`).replace();
       },
     );
@@ -95,6 +100,7 @@ function SchedulePeriodicJobCtrl($routeParams, $location, PeriodicJob, toastr) {
       },
       (periodicjob) => {
         toastr.success('Resumed');
+        this.periodicJob = periodicjob;
         $location.path(`/periodicjobs/${periodicjob.id}`).replace();
       },
     );

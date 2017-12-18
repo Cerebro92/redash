@@ -15,7 +15,11 @@
           </div>
           <div class="form-group">
             <label class="control-label">Query ID</label>
-            <input class="form-control" type="number" ng-model="$ctrl.periodicJob.query_id" required/>
+            <select class="form-control" ng-model="$ctrl.periodicJob.query_id" required>
+              <option ng-repeat="query in $ctrl.queryOptions" value="{{query.id}}">
+                {{query.id}} | {{query.name}}
+              </option>
+            </select>
           </div>
           <div class="form-group">
             <label class="control-label">Trigger</label>
