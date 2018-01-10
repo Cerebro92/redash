@@ -26,7 +26,11 @@ class PushToS3Task(task.Task):
             key = '{}/report_{}.csv'.format(str(query_id),
                     datetime.now().strftime('%Y_%m_%d_%H_%M_%S'))
 
-            s3_bucket, s3_path_prefix = s3_path.split('/', 1)
+            s3_bucket, s3_path_prefix = None, None
+
+            if s3_path:
+                s3_bucket, s3_path_prefix = s3_path.split('/', 1)
+
             if not s3_bucket:
                 s3_bucket = settings.REPORTS_S3_BUCKET
 
