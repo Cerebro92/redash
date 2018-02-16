@@ -9,7 +9,7 @@ const stateClass = {
 
 class PeriodicJobListCtrl {
   constructor(PeriodicJob) {
-    this.periodicjobs = new Paginator([], { itemsPerPage: 20 });
+    this.periodicjobs = new Paginator([], { itemsPerPage: 100 });
     PeriodicJob.query((periodicjobs) => {
       this.periodicjobs.updateRows(periodicjobs.map(periodicjob => ({
         name: periodicjob.name,
